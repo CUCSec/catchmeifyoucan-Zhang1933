@@ -2,6 +2,8 @@ from pathlib import Path
 import struct
 
 judge={".jpg":b"\xff\xd8",".png": b"\x89P", ".bmp":b"BM",".pdf":b"%P",".docx":b"PK",".pptx":b"PK",".exe":b"MZ"}
+# 生成字典匹配，比较前两位（因为只有前两位的不同）
+
 def check(suf,fileHeader):
     if judge[suf]==fileHeader:
         return 1
@@ -37,7 +39,7 @@ for file in files:
         tfiles[file]=st.st_size
 
 files={k:v for k,v in sorted(tfiles.items(),key=lambda x: x[1],reverse=True)}
-
+# 只是熟练一下排序，没有意义的排序
 
 for file in files:
     # print(file)
@@ -47,7 +49,7 @@ for file in files:
 
     with open(file,'rb') as f:
         fileHeader=f.read(2)
-
+    #读取文件头前两位比较
     if check(suf,fileHeader):
         moveFlies(file,RFlies)
     else:
