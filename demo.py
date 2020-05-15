@@ -1,7 +1,8 @@
 from pathlib import Path
 
-judge={".jpg":b"\xff\xd8",".png": b"\x89P", ".bmp":b"BM",".pdf":b"%P",".docx":b"PK",".pptx":b"PK",".exe":b"MZ"}
-# 生成字典匹配，比较前两位（因为只有前两位的不同）
+
+judge={".jpg":b"\xff\xd8",".png": b"\x89PNG", 
+    ".bmp":b"BM",".pdf":b"%PDF",".docx":b"PK\x03\x04",".pptx":b"PK\x03\x04",".exe":b"MZ"}
 
 def check(suf,fileHeader):
     return judge[suf]==fileHeader
@@ -26,25 +27,15 @@ Path(RFlies).mkdir(exist_ok=True)
 
 files=Path(root).glob("**/*")
 
-
-# tfiles={}
-# for file in files:
-#     if Path(file).is_file():
-#         st=Path(file).stat()
-#         tfiles[file]=st.st_size
-
-# files={k:v for k,v in sorted(tfiles.items(),key=lambda x: x[1],reverse=True)}
-# 只是熟练一下排序，没有意义的排序
-
 for file in files:
     # print(file)
     if Path(file).is_file()== False:
         continue
-
-    suf=Path(file).suffix
     
+    suf=Path(file).suffix
+
     with open(file,'rb') as f:
-        fileHeader=f.read(2)
+        fileHeader=f.read(len(judge[suf]))
     #读取文件头前两位比较
     if check(suf,fileHeader):
         moveFlies(file,RFlies)
