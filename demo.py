@@ -4,9 +4,6 @@ from pathlib import Path
 judge={".jpg":b"\xff\xd8",".png": b"\x89PNG", 
     ".bmp":b"BM",".pdf":b"%PDF",".docx":b"PK\x03\x04",".pptx":b"PK\x03\x04",".exe":b"MZ"}
 
-def check(suf,fileHeader):
-    return judge[suf]==fileHeader
-
 def moveFlies(file,desfile):
     Path(file).rename(desfile/Path(file).name)
 
@@ -36,8 +33,8 @@ for file in files:
 
     with open(file,'rb') as f:
         fileHeader=f.read(len(judge[suf]))
-    #读取文件头前两位比较
-    if check(suf,fileHeader):
+    
+    if judge[suf]==fileHeader:
         moveFlies(file,RFlies)
     else:
         moveFlies(file,WFlies)      
